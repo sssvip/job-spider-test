@@ -1,0 +1,16 @@
+##README
+
+### 此次爬虫模块简单说明图
+![这里写图片描述](http://img.blog.csdn.net/20160909112957688)
+
+#### HtmlDownloader:专门负责html资源下载的类
+#### UrlManager:负责爬虫URL管理类，放置重复爬取相同网页
+#### HtmlOutputer:专门负责输出类，为方便展示数据，采用html输出
+##### 1.Company_Outputer: 具体特殊业务逻辑类，针对公司信息进行输出
+##### 2.Position_Outputer: 具体特殊业务逻辑类，针对职位信息进行输出
+#### Parser:解析网页类
+##### 1.CompanyUrl_Parser: 针对信息解析网页Url，返回公司Url集合
+##### 2.CompanyInfo_Parser: 针对信息解析网页信息，返回公司信息实体类
+##### 3.Position_Parser: 针对信息解析网页信息，返回职位信息实体类
+#### Model:建立相关实体类，方便数据的打包传输
+#### Main:程序入口模块
