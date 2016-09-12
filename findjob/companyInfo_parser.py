@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import company_model, position_model,re
 
 class CompanyInfo_Parser:
+
     def parse(self,root_url,url, cont):
         if url is None or cont is None:
             return
@@ -15,9 +16,39 @@ class CompanyInfo_Parser:
         # 初始化公司对象
         company = company_model.Company_Model()
         # 公司信息解析
-        name = soup.find('h1', class_="com-name")  # 公司名解析
-        address = soup.find('h4', class_="address-com")  # 公司名解析
-        introduce = soup.find('dd', id="detail-text")  # 公司介绍解析
+        # 一边解析，一边提取数据装载到公司对象
+        # 公司名解析
+        name = soup.find('h1', class_="com-name")
+        company.name = name.get_text()
+        #公司性质解析
+        property=soup.find('ul', class_="other-com")
+        company.property=property.get_text().split("|")[1][4:].strip() #[0] 切分后的第一个 [3:]从字符串第三个字符开始，去掉“行业：”
+        #公司一级行业
+        company.business_type1=property.get_text().split("|")[0][4:].split("/")[0].strip() #[0] 切分后的第一个 [3:]从字符串第三个字符开始，去掉“行业：”
+        #公司二级行业
+        #放置公司网址没有二级行业
+        if len(property.get_text().split("|")[0][3:].split("/"))>1:
+            company.business_type2=property.get_text().split("|")[0][3:].split("/")[1].strip() #[0] 切分后的第一个 [3:]从字符串第三个字符开始，去掉“行业：”
+        #公司规模解析
+        company.staff_nums=property.get_text().split("|")[2][4:].strip() #[0] 切分后的第一个 [3:]从字符串第三个字符开始，去掉“行业：”
+        #公司标签解析
+        tags=soup.find('ul',id="compBenefits");
+        tags=soup.find_all('li',class_="cutWord");
+        for tag in tags:
+            company.tags.append(tag.get_text())
+        # 公司地址解析
+        address = soup.find('i', class_="address").find_parent()
+        if (address is not None):
+            #去掉前面的“公司地址：”
+            company.address = address.get_text()[5:]
+        # 公司官网解析
+        #防止公司网址为空
+        if soup.find('i', class_="web-address") is not None:
+            website = soup.find('i', class_="web-address").find_parent().find('a')
+            if (website is not None):
+                company.website = website.get_text()
+        # 公司介绍解析
+        introduce = soup.find('dd', id="detail-text")
         logourl = soup.find('img', class_="img-attr")  # 公司名解析
         # 职位解析 -此处缩小了解析范围
         positions = soup.find_all('a', href=re.compile(r"/job/\d+\.html"))
@@ -30,10 +61,9 @@ class CompanyInfo_Parser:
             position.url=root_url+str(temp_position_soup.find('a')['href'])  # 添加公司网址集合
             #最后进行职位信息封装
             company.positions.add(position)
-        # 提取数据装载到公司对象
-        company.name=name.get_text()
-        if(address is not None):
-            company.address=address.get_text()
+
+
+
         company.introduce = introduce.get_text().strip()
         # 存在公司没有LOGO情况
         if (logourl is None):

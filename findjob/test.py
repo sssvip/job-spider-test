@@ -9,5 +9,5 @@ root="http://campus.chinahr.com/qz/p2"
 url="http://campus.chinahr.com"
 cont=url,downloader.download(root)
 
-print cont;
+print str(cont).encode("utf-8")
 

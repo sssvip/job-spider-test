@@ -9,12 +9,11 @@ class Spider:
         self.urls = url_manager.UrlManager()
         self.downloader = html_downloader.HtmlDownloader()
         self.parser = companyUrl_parser.CompanyUrl_Parser()
-
     # 爬虫起始点
     # root_url起始页面
     # url
     def crawl(self, root_url, url):
-        company_urls = self.getCompanyUrls(url, 1, 10)
+        company_urls = self.getCompanyUrls(url, 1, 2)
         position_outer = position_outputer.PositionOutputer()
         company_outer=company_outputer.Company_Outputer()
         for link in company_urls:
@@ -25,16 +24,16 @@ class Spider:
                 print "正在收集公司职位信息-准备打印"
                 position.company_name=company.name
                 position_outer.collect_data(position)
-        company_outer.output_html()
-        position_outer.output_html()
+        company_outer.output_txt()
+        position_outer.output_txt()
 
     # 此方法存在特殊逻辑----只适用于url：http://campus.chinahr.com的情况
     # 返回start_page到end_page页面所有公司网址，便于后期通过公司网址爬取公司信息以及职位信息
     # 更新时间：20160907
     def getCompanyUrls(self, url, start_page, end_page):
-        if start_page < 0:
+        if start_page <= 0:
             print "Parameters can not be negative"
-            return
+            start_page=1
         temp_url = ""
         company_url_manager = url_manager.UrlManager();
         # 获取公司页面start_page-end_page页
