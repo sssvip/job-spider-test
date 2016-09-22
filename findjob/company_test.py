@@ -2,12 +2,13 @@
 import  companyInfo_parser,html_downloader,company_outputer
 
 compayinfo_paraser=companyInfo_parser.CompanyInfo_Parser()
-#url="http://campus.chinahr.com/company/e23dae840dc05e5646baab19j.html"
-url="http://campus.chinahr.com/company/09bbb0e4370a4857a4329bacj.html"
+url="http://campus.chinahr.com/company/0376b0e4d38eac5675c2277bj.html"
 root_url="http://campus.chinahr.com"
 cont=html_downloader.HtmlDownloader().download(url)
 company=compayinfo_paraser.parse(root_url,url,cont);
 #打印输出
+print "company uuid:"+company.uuid
+print "company url:"+company.url
 print "company name:"+company.name
 print "company short_name:"+company.short_name
 print "company property:"+company.property

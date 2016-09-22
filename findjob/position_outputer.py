@@ -1,5 +1,5 @@
 # coding:utf-8
-
+import os
 class PositionOutputer:
     def __init__(self):
         self.datas = list()
@@ -7,6 +7,8 @@ class PositionOutputer:
         if position is None:
             return
         self.datas.append(position)
+    def clear_data(self):
+        del self.datas[:]
     def output_html(self):
         fout = open('positionDetails.html', 'w')
         fout.write("<html>")
@@ -42,26 +44,49 @@ class PositionOutputer:
         fout.write("</html>")
         fout.close()
     def output_txt(self):
-        fout = open('positionDetails.txt', 'w')
-        fout.write("职位名称\t")
-        fout.write("工作地区\t")
-        fout.write("学历\t")
-        fout.write("职位描述\t")
-        fout.write("职位人数\t")
-        fout.write("有效起始日期\t")
-        fout.write("有效截止日期\t")
-        fout.write("实习或全职\t")
-        fout.write("薪水\t")
-        fout.write("\n")
+        file_name = 'positionDetails.txt'
+        # 如果文件存在了，不输出表头
+        if (os.path.exists(file_name)):
+            fout = open(file_name, 'a')
+        else:
+            fout = open(file_name, 'w')
+            fout.write("公司UUID\t")
+            fout.write("职位URL\t")
+            fout.write("职位名称\t")
+            fout.write("实习或全职\t")
+            fout.write("所属部门\t")
+            fout.write("工作地区\t")
+            fout.write("详细地点\t")
+            fout.write("职位人数\t")
+            fout.write("发布日期\t")
+            fout.write("有效起始日期\t")
+            fout.write("有效截止日期\t")
+            fout.write("薪水\t")
+            fout.write("学历\t")
+            fout.write("英语要求\t")
+            fout.write("性别\t")
+            fout.write("年龄大于\t")
+            fout.write("年龄小于\t")
+            fout.write("职位描述\t")
+            fout.write("\n")
         for position in self.datas:
+            fout.write("%s\t" % position.company_uuid.encode('utf-8'))
+            fout.write("%s\t" % position.url.encode('utf-8'))
             fout.write("%s\t"%position.name.encode('utf-8'))
-            fout.write("%s\t"%position.city.encode('utf-8'))
-            fout.write("%s\t"%position.degree.encode('utf-8'))
-            fout.write("%s\t"%position.desc.encode('utf-8'))
+            fout.write("%s\t" % position.requirement.encode('utf-8'))
+            fout.write("%s\t" % position.department.encode('utf-8'))
+            fout.write("%s\t" % position.city.encode('utf-8'))
+            fout.write("%s\t" % position.detailPosition.encode('utf-8'))
             fout.write("%s\t"%position.personNum.encode('utf-8'))
+            fout.write("%s\t"%position.publish_time.encode('utf-8'))
             fout.write("%s\t"%position.validStartDate.encode('utf-8'))
             fout.write("%s\t"%position.validEndDate.encode('utf-8'))
-            fout.write("%s\t"%position.requirement.encode('utf-8'))
             fout.write("%s\t"%position.salary.encode('utf-8'))
+            fout.write("%s\t" % position.degree.encode('utf-8'))
+            fout.write("%s\t" % position.english_require.encode('utf-8'))
+            fout.write("%s\t" % position.sex.encode('utf-8'))
+            fout.write("%s\t" % position.startAge.encode('utf-8'))
+            fout.write("%s\t" % position.endAge.encode('utf-8'))
+            fout.write("%s\t" % position.desc.encode('utf-8'))
             fout.write("\n")
         fout.close()

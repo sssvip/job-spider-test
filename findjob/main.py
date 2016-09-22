@@ -2,30 +2,43 @@
 ' a main module '
 __author__ = 'David West : admin@dxscx.com'
 
-import url_manager, html_downloader, companyUrl_parser, companyInfo_parser, positionInfo_parser, position_outputer,company_outputer
+import url_manager, html_downloader, companyUrl_parser, companyInfo_parser, positionInfo_parser, position_outputer,company_outputer,time,random
 
 class Spider:
     def __init__(self):
         self.urls = url_manager.UrlManager()
         self.downloader = html_downloader.HtmlDownloader()
         self.parser = companyUrl_parser.CompanyUrl_Parser()
+        self.sleep_time=0;#爬取输出一个公司暂停几秒
     # 爬虫起始点
     # root_url起始页面
     # url
     def crawl(self, root_url, url):
-        company_urls = self.getCompanyUrls(url, 1, 2)
-        position_outer = position_outputer.PositionOutputer()
+        company_urls = self.getCompanyUrls(url, 1,175)
         company_outer=company_outputer.Company_Outputer()
+        position_outer = position_outputer.PositionOutputer()
+        index=0
         for link in company_urls:
+            index=index+1
+            print index
             print "正在收集%s公司信息-准备打印"%link.encode("utf-8")
             company=self.getCompanyInfo(url, link)
             company_outer.collect_data(company)
+            # 搜集一个公司信息，追加一个公司，以免后面出错一点也没有写入
+            company_outer.output_txt()
+            company_outer.clear_data()  # 输出后清空搜集的数据，以便下次使用此输出对象数据重复
+            #随机暂停休息几秒
+            self.sleep_time=sleep_time=random.randint(3,15);
+            time.sleep(self.sleep_time)
+            print "程序休息"+str(self.sleep_time)+"秒"
             for position in company.positions:
                 print "正在收集公司职位信息-准备打印"
                 position.company_name=company.name
                 position_outer.collect_data(position)
-        company_outer.output_txt()
-        position_outer.output_txt()
+            #每个公司职位信息在搜集完后直接追加
+            position_outer.output_txt()
+            position_outer.clear_data()#输出后清空搜集的数据，以便下次使用此输出对象数据重复
+
 
     # 此方法存在特殊逻辑----只适用于url：http://campus.chinahr.com的情况
     # 返回start_page到end_page页面所有公司网址，便于后期通过公司网址爬取公司信息以及职位信息
@@ -68,8 +81,7 @@ class Spider:
         size=len(company.positions)
         #取出所有职位网址进行解析转换
         while size>0:
-            position_cont = html_downloader.HtmlDownloader().download(company.positions.pop().url.encode("utf-8"))
-            temp_positions.append(positioninfo_parser.parse(position_cont))
+            temp_positions.append(positioninfo_parser.parse(company.positions.pop().url.encode("utf-8"),company.uuid))
             size=size-1
         company.positions=temp_positions
         return company

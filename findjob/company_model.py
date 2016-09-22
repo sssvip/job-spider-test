@@ -6,6 +6,10 @@ import position_model
 
 class Company_Model:
     def __init__(self):
+        #公司uuid
+        self.uuid=""
+        # 公司信息来源url
+        self.url = ""
         # 公司名
         self.name = ""
         # 公司简称

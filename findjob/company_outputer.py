@@ -1,6 +1,7 @@
 # coding:utf-8
 ' a company outputer '
 __author__ = 'David West : admin@dxscx.com'
+import os
 class Company_Outputer:
     def __init__(self):
         self.datas = list()
@@ -9,7 +10,8 @@ class Company_Outputer:
         if company is None:
             return
         self.datas.append(company)
-
+    def clear_data(self):
+        del self.datas[:]
     def output_html(self):
         fout = open('companyDetails.html', 'w')
         fout.write("<html>")
@@ -64,24 +66,33 @@ class Company_Outputer:
 
 
     def output_txt(self):
-        fout = open('companyDetails.txt', 'w')
-        fout.write("%s\t" % "name")
-        fout.write("%s\t" % "short_name")
-        fout.write("%s\t" % "property")
-        fout.write("%s\t" % "staff_nums")
-        fout.write("%s\t" % "business_type1")
-        fout.write("%s\t" % "business_type2")
-        fout.write("%s\t" % "province_city")
-        fout.write("%s\t" % "tags")
-        fout.write("%s\t" % "address")
-        fout.write("%s\t" % "website")
-        fout.write("%s\t" % "mail_code")
-        fout.write("%s\t" % "introduce_one_sentence")
-        fout.write("%s\t" % "introduce")
-        fout.write("%s\t" % "logourl")
-        fout.write("%s\t" % "position number")
-        fout.write("\n")
+        file_name='companyDetails.txt'
+        #如果文件存在了，不输出表头
+        if(os.path.exists(file_name)):
+            fout = open(file_name, 'a')
+        else:
+            fout = open(file_name, 'w')
+            fout.write("%s\t" % "公司UUID")
+            fout.write("%s\t" % "公司URL")
+            fout.write("%s\t" % "公司名")
+            fout.write("%s\t" % "公司简称")
+            fout.write("%s\t" % "公司性质")
+            fout.write("%s\t" % "公司规模")
+            fout.write("%s\t" % "行业性质1")
+            fout.write("%s\t" % "行业性质2")
+            fout.write("%s\t" % "公司省市")
+            fout.write("%s\t" % "公司标签")
+            fout.write("%s\t" % "公司地址")
+            fout.write("%s\t" % "公司官网")
+            fout.write("%s\t" % "公司邮编")
+            fout.write("%s\t" % "一句话介绍")
+            fout.write("%s\t" % "公司介绍")
+            fout.write("%s\t" % "公司Logo_Url")
+            fout.write("%s\t" % "公司发布职位数量")
+            fout.write("\n")
         for company in self.datas:
+            fout.write("%s\t" % company.uuid.encode('utf-8'))
+            fout.write("%s\t" % company.url.encode('utf-8'))
             fout.write("%s\t" % company.name.encode('utf-8'))
             fout.write("%s\t" % company.short_name.encode('utf-8'))
             fout.write("%s\t" % company.property.encode('utf-8'))
