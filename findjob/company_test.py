@@ -2,7 +2,7 @@
 import  companyInfo_parser,html_downloader,company_outputer
 
 compayinfo_paraser=companyInfo_parser.CompanyInfo_Parser()
-url="http://campus.chinahr.com/company/0376b0e4d38eac5675c2277bj.html"
+url="http://campus.chinahr.com/company/57a3021cc953d260c5cf35faa.html"
 root_url="http://campus.chinahr.com"
 cont=html_downloader.HtmlDownloader().download(url)
 company=compayinfo_paraser.parse(root_url,url,cont);
